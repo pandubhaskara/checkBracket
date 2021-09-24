@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Lebron",
+        "team": "Lakers",
+        "pointPerGame":27
+    },
+    {
+        "name": "Kevin",
+        "team": "Durent",
+        "pointPerGame":26
+    }
+]
