@@ -1,9 +1,9 @@
-const express = Noderequire("express")
+const express = require("express")
 const app = express()
-const router= Noderequire('./routes')
+const router= require('./routes')
 
-const input = Noderequire('./data.json')
-let port = process.env.PORT || 5432;
+const input = require('./data.json')
+let port = process.env.PORT || 5000;
 
 app.use(express.json())
 app.get("/", (req,res)=>{
@@ -15,5 +15,5 @@ app.get("/players", (req,res)=>{
 })
 
 app.listen(port, ()=>{
-    console.log(`server runing on port ${port}`)
+    console.log(`Server running on port ${port}`)
 })

@@ -4,3 +4,5 @@ const movie = require("../controllers/movie")
 
 router.get('/', movie.getMovie)
 router.post('/', movie.postMovie)
+
+module.exports = router

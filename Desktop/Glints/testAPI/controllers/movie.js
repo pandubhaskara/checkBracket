@@ -1,46 +1,11 @@
 const Joi = require("joi");
-const movie = require("../models").moviedb;
+const {moviedb} = require("../models");
 
 module.exports = {
   postMovie: async (req, res) => {
     const body = req.body;
     try {
-      const schema = Joi.object({
-        title: Joi.string().required(),
-        synopsis: Joi.string().required(),
-        trailer: Joi.string().required(),
-        poster: Joi.string().required(),
-        rating: Joi.float().required(),
-        releaseDate: Joi.date().required(),
-        director: Joi.string().required(),
-        featuredSong: Joi.string().required(),
-        budget: Joi.string().required(),
-      });
-
-      const { error } = schema.validate(
-        {
-          title: body.title,
-          synopsis: body.synopsis,
-          trailer: body.trailer,
-          poster: body.poster,
-          rating: body.rating,
-          releaseDate: body.releaseDate,
-          director: body.director,
-          featuredSong: body.featuredSong,
-          budget: body.budget,
-        },
-        { abortEarly: false }
-      );
-
-      if (error) {
-        return res.status(400).json({
-          status: "failed",
-          message: "Bad Request",
-          errors: error["details"][0]["message"],
-        });
-      }
-
-      const check = await movie.create({
+      const check = await moviedb.create({
         title: body.title,
         synopsis: body.synopsis,
         trailer: body.trailer,
@@ -73,7 +38,7 @@ module.exports = {
   },
   getMovie: async (req, res) => {
     try {
-      const data = await movie.findAll();
+      const data = await moviedb.findAll();
       if (!data) {
         return res.status(404).json({
           status: "failed",
@@ -83,7 +48,7 @@ module.exports = {
       }
       return res.status(200).json({
         status: "success",
-        message: "Successfully retrieved students tables",
+        message: "Successfully retrieved movies tables",
         data: data,
       });
     } catch (error) {
