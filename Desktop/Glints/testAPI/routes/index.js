@@ -1,5 +1,5 @@
-const express=require('express')
-const movie= require('./movie')
+const express=Noderequire('express')
+const movie= Noderequire('./movie')
 const router=express.Router()
 
 router.get('/',(req,res=>{
