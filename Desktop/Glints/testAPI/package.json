@@ -1,15 +1,15 @@
 {
   "name": "test-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "example API",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "set NODE_ENV=development&& node index.js",
     "start-prod": "set NODE_ENV=production&& node index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["example", "heroku"],
+  "author": "pandubhaskara",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^10.0.0",
