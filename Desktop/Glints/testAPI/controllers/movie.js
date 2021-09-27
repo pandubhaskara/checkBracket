@@ -7,11 +7,11 @@ module.exports = {
     try {
       const schema = Joi.object({
         title: Joi.string().required(),
-        synopsis: Joi.text().required(),
+        synopsis: Joi.string().required(),
         trailer: Joi.string().required(),
         poster: Joi.string().required(),
         rating: Joi.number().required(),
-        releaseDate: body.releaseDate,
+        releaseDate: Joi.string().required(),
         director: Joi.string().required(),
         featuredSong: Joi.string().required(),
         budget: Joi.string().required(),
