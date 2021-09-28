@@ -1,35 +1,20 @@
 const Joi = require("joi");
-const { moviedb } = require("../models");
-const characters = require("../models").characters;
+const { characters } = require("../models");
+const moviedb = require("../models").moviedb;
 
 module.exports = {
-  postMovie: async (req, res) => {
+  postCharacter: async (req, res) => {
     const body = req.body;
-    console.log(body);
     try {
       const schema = Joi.object({
-        title: Joi.string().required(),
-        synopsis: Joi.string().required(),
-        trailer: Joi.string().required(),
-        poster: Joi.string().required(),
-        rating: Joi.number().required(),
-        releaseDate: Joi.string().required(),
-        director: Joi.string().required(),
-        featuredSong: Joi.string().required(),
-        budget: Joi.string().required(),
+        name: Joi.string().required(),
+        photo: Joi.string().required(),
       });
 
       const { error } = schema.validate(
         {
-          title: body.title,
-          synopsis: body.synopsis,
-          trailer: body.trailer,
-          poster: body.poster,
-          rating: body.rating,
-          releaseDate: body.releaseDate,
-          director: body.director,
-          featuredSong: body.featuredSong,
-          budget: body.budget,
+          name: body.name,
+          photo: body.photo,
         },
         { abortEarly: false }
       );
@@ -42,16 +27,9 @@ module.exports = {
         });
       }
 
-      const check = await moviedb.create({
-        title: body.title,
-        synopsis: body.synopsis,
-        trailer: body.trailer,
-        poster: body.poster,
-        rating: body.rating,
-        releaseDate: body.releaseDate,
-        director: body.director,
-        featuredSong: body.featuredSong,
-        budget: body.budget,
+      const check = await characters.create({
+        name: body.name,
+        photo: body.photo,
       });
 
       if (!check) {
@@ -73,18 +51,18 @@ module.exports = {
       });
     }
   },
-  getMovie: async (req, res) => {
+  getCharacter: async (req, res) => {
     try {
-      const data = await moviedb.findAll({
+      const data = await characters.findAll({
         include: [
           {
-            model: characters,
-            as: "characters",
+            model: moviedb,
+            as: "movies",
           },
         ],
         order: [
           ["createdAt", "ASC"],
-          [{ model: characters, as: "characters" }, "createdAt", "ASC"],
+          [{ model: moviedb, as: "movies" }, "title", "ASC"],
         ],
       });
       if (!data) {
@@ -96,7 +74,7 @@ module.exports = {
       }
       return res.status(200).json({
         status: "success",
-        message: "Successfully retrieved movies tables",
+        message: "Successfully retrieved characters tables",
         data: data,
       });
     } catch (error) {
@@ -107,33 +85,19 @@ module.exports = {
       });
     }
   },
-  updateMovie: async (req, res) => {
+  updateCharacter: async (req, res) => {
     const body = req.body;
     console.log(body);
     try {
       const schema = Joi.object({
-        title: Joi.string(),
-        synopsis: Joi.string(),
-        trailer: Joi.string(),
-        poster: Joi.string(),
-        rating: Joi.number(),
-        releaseDate: Joi.string(),
-        director: Joi.string(),
-        featuredSong: Joi.string(),
-        budget: Joi.string(),
+        name: Joi.string(),
+        photo: Joi.string(),
       });
 
       const { error } = schema.validate(
         {
-          title: body.title,
-          synopsis: body.synopsis,
-          trailer: body.trailer,
-          poster: body.poster,
-          rating: body.rating,
-          releaseDate: body.releaseDate,
-          director: body.director,
-          featuredSong: body.featuredSong,
-          budget: body.budget,
+          name: body.name,
+          photo: body.photo,
         },
         { abortEarly: false }
       );
@@ -146,7 +110,7 @@ module.exports = {
         });
       }
 
-      const updatedMovie = await moviedb.update(
+      const updatedCharacter = await characters.update(
         { ...body },
         {
           where: {
@@ -154,14 +118,14 @@ module.exports = {
           },
         }
       );
-      if (!updatedMovie[0]) {
+      if (!updatedCharacter[0]) {
         return res.status(400).json({
           status: "failed",
           message: "Unable to update database",
         });
       }
 
-      const data = await moviedb.findOne({
+      const data = await characters.findOne({
         where: {
           id: req.params.id,
         },
@@ -180,10 +144,10 @@ module.exports = {
       });
     }
   },
-  deleteMovie: async (req, res) => {
+  deleteCharacter: async (req, res) => {
     const id = req.params.id;
     try {
-      const check = await moviedb.destroy({
+      const check = await characters.destroy({
         where: {
           id, // id : id
         },

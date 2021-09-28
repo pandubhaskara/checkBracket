@@ -6,8 +6,7 @@
     "host": "ec2-34-233-187-36.compute-1.amazonaws.com",
     "dialect": "postgres",
     "dialectOptions":{
-      "ssl": true, 
-      "ssl":{"rejectUnauthorized": false }     
+      "ssl":{"rejectUnauthorized": false }      
     }
   },
   "test": {

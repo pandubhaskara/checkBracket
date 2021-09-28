@@ -10,19 +10,23 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      moviedb.belongsToMany(models.characters,{
+        through: "movie_character",
+        as: 'characters',
+        foreignKey: 'movie_id'
+      })
     }
   };
   moviedb.init({
     title: DataTypes.STRING,
-    synopsis: DataTypes.STRING,
+    synopsis: DataTypes.TEXT,
     trailer: DataTypes.STRING,
     poster: DataTypes.STRING,
     rating: DataTypes.FLOAT,
-    releaseDate: DataTypes.DATE,
+    releaseDate: DataTypes.STRING,
     director: DataTypes.STRING,
     featuredSong: DataTypes.STRING,
-    budget: DataTypes.STRING
+    budget: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'moviedb',
