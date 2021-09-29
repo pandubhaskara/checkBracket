@@ -4,6 +4,7 @@ const movie = require("../controllers/movie")
 
 router.get('/', movie.getMovie)
 router.post('/', movie.postMovie)
+router.get('/:id', movie.getByIdMovie)
 router.put('/:id', movie.updateMovie)
 router.put('/:id', movie.deleteMovie)
 

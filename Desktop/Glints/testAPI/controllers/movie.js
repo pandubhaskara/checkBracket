@@ -80,6 +80,9 @@ module.exports = {
           {
             model: characters,
             as: "characters",
+            through:{
+              attributes:[]
+            }
           },
         ],
         order: [
@@ -104,6 +107,48 @@ module.exports = {
       return res.status(500).json({
         status: "failed",
         message: "Internal Server Error",
+      });
+    }
+  },
+  getByIdMovie: async (req,res)=>{
+    try {
+      const movie = await moviedb.findOne({
+        where: {
+          id: req.params.id,
+        },
+        
+          include: [
+            {
+              model: characters,
+              as: "characters",
+              through:{
+                attributes:[]
+              }
+            },
+          ],
+          order: [
+            ["createdAt", "ASC"],
+            [{ model: characters, as: "characters" }, "createdAt", "ASC"],
+          ],
+        
+      });
+      if (!movie) {
+        return res.status(400).json({
+          status: "failed",
+          message: "Movie not found!",
+        });
+      } else {
+        return res.status(200).json({
+          status: "success",
+          message: "Successfully retrieved user!",
+          data: movie,
+        });
+      };
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+          status: "failed",
+          message: error.message || "Internal Server Error",
       });
     }
   },
