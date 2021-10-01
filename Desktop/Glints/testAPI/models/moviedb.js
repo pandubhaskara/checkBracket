@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const movie = require('../controllers/movie');
 module.exports = (sequelize, DataTypes) => {
   class moviedb extends Model {
     /**
@@ -14,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         through: "movie_character",
         as: 'characters',
         foreignKey: 'movie_id'
+      })
+      moviedb.hasMany(models.Review,{
+        foreignKey: "movieId",
+        as: "reviews"
       })
     }
   };

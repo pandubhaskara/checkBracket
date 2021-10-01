@@ -1,6 +1,8 @@
 const Joi = require("joi");
-const { moviedb } = require("../models");
+const models = require("../models");
+const moviedb = require("../models").moviedb;
 const characters = require("../models").characters;
+const review = require("../models").Review;
 
 module.exports = {
   postMovie: async (req, res) => {
@@ -80,15 +82,21 @@ module.exports = {
           {
             model: characters,
             as: "characters",
-            through:{
-              attributes:[]
-            }
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            model: review,
+            as: "reviews",
+            attributes: {exclude: ['movieId']},
           },
         ],
         order: [
           ["createdAt", "ASC"],
           [{ model: characters, as: "characters" }, "createdAt", "ASC"],
         ],
+        
       });
       if (!data) {
         return res.status(404).json({
@@ -110,27 +118,26 @@ module.exports = {
       });
     }
   },
-  getByIdMovie: async (req,res)=>{
+  getByIdMovie: async (req, res) => {
     try {
       const movie = await moviedb.findOne({
         where: {
           id: req.params.id,
         },
-        
-          include: [
-            {
-              model: characters,
-              as: "characters",
-              through:{
-                attributes:[]
-              }
+
+        include: [
+          {
+            model: characters,
+            as: "characters",
+            through: {
+              attributes: [],
             },
-          ],
-          order: [
-            ["createdAt", "ASC"],
-            [{ model: characters, as: "characters" }, "createdAt", "ASC"],
-          ],
-        
+          },
+        ],
+        order: [
+          ["createdAt", "ASC"],
+          [{ model: characters, as: "characters" }, "createdAt", "ASC"],
+        ],
       });
       if (!movie) {
         return res.status(400).json({
@@ -143,12 +150,12 @@ module.exports = {
           message: "Successfully retrieved user!",
           data: movie,
         });
-      };
+      }
     } catch (error) {
       console.log(error);
       return res.status(500).json({
-          status: "failed",
-          message: error.message || "Internal Server Error",
+        status: "failed",
+        message: error.message || "Internal Server Error",
       });
     }
   },

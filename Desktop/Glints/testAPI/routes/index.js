@@ -2,6 +2,7 @@ const express = require("express")
 const movie= require('./movie')
 const character=require('./character')
 const movchara=require('./movie_character')
+const review=require('./review')
 const router= express.Router()
 
 router.get('/',(req,res)=>{
@@ -10,5 +11,6 @@ router.get('/',(req,res)=>{
 router.use('/movie', movie)
 router.use('/character', character)
 router.use("/movchara", movchara)
+router.use('/review', review);
 
 module.exports = router
