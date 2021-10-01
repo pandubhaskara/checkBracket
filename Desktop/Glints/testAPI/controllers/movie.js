@@ -3,6 +3,7 @@ const models = require("../models");
 const moviedb = require("../models").moviedb;
 const characters = require("../models").characters;
 const review = require("../models").Review;
+const user = require("../models").User;
 
 module.exports = {
   postMovie: async (req, res) => {
@@ -124,7 +125,6 @@ module.exports = {
         where: {
           id: req.params.id,
         },
-
         include: [
           {
             model: characters,
@@ -137,6 +137,11 @@ module.exports = {
             model: review,
             as: "reviews",
             attributes: {exclude: ['movieId']},
+            include: [{
+              model :user,
+              as: "user",
+              attributes: { exclude: ["email", "password"] }
+            }]
           },
         ],
         order: [

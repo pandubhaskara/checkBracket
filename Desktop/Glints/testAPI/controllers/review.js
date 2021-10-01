@@ -1,27 +1,20 @@
 const models = require("../models");
 const review = require("../models").Review;
 const movie = require("../models").moviedb;
+const user = require("../models").User;
 
 const getAllReview = async (req, res) => {
   try {
     const movieId = req.body.movieId;
     const Review = await review.findAll({
-        // include: [
-        //   {
-        //     model: movie,
-        //     as: "movie",
-        //   },
-        // ],
+      include: [
+        {
+          model: user,
+          as: "user",
+          attributes: { exclude: ["email", "password"] },
+        },
+      ],
     });
-    // const findAllReview = await models.Review.findAll({ movieId });
-    // const allRating = findAllReview.map((x) => x.rating);
-    // const avgRating = allRating.reduce((a, b) => a + b, 0) / allRating.length;
-
-    // const updateRating = await models.Review.findAll(movieId, {
-    //   "movieInfo.rating": avgRating,
-    //   $inc: { "movieInfo.total_review": 1 },
-    // })
-
     if (!Review) {
       res.status(400).json({
         status: "failed",
@@ -84,7 +77,18 @@ const getReviewByPage = async (req, res) => {
 const getReviewById = async (req, res) => {
   try {
     const id = req.params.id;
-    const Review = await models.Review.findByPk(id);
+    const Review = await models.Review.findOne({
+      where: {
+        id: req.params.id,
+      },
+      include: [
+        {
+          model: user,
+          as: "user",
+          attributes: { exclude: ["email", "password"] },
+        },
+      ],
+    });
 
     if (!Review) {
       res.status(400).json({
