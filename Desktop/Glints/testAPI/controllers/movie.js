@@ -133,6 +133,11 @@ module.exports = {
               attributes: [],
             },
           },
+          {
+            model: review,
+            as: "reviews",
+            attributes: {exclude: ['movieId']},
+          },
         ],
         order: [
           ["createdAt", "ASC"],
