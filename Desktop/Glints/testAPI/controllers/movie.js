@@ -91,6 +91,11 @@ module.exports = {
             model: review,
             as: "reviews",
             attributes: {exclude: ['movieId']},
+            include: [{
+              model :user,
+              as: "user",
+              attributes: { exclude: ["email", "password","role"] }
+            }]
           },
         ],
         order: [
@@ -140,7 +145,7 @@ module.exports = {
             include: [{
               model :user,
               as: "user",
-              attributes: { exclude: ["email", "password"] }
+              attributes: { exclude: ["email", "password","role"] }
             }]
           },
         ],
