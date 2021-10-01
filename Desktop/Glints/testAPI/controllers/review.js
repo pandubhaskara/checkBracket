@@ -11,8 +11,21 @@ const getAllReview = async (req, res) => {
         {
           model: user,
           as: "user",
-          attributes: { exclude: ["email", "password"] },
+          attributes: {
+            exclude: ["email", "password","id"],
+          },
         },
+      ],
+      attributes: [
+        "movieId",
+        [
+          models.sequelize.fn("AVG", models.sequelize.col("rating")),
+          "ratingAvg",
+        ],
+      ],
+      group: ["movieId"],
+      order: [
+        [models.sequelize.fn("AVG", models.sequelize.col("rating")), "DESC"],
       ],
     });
     if (!Review) {
@@ -85,7 +98,15 @@ const getReviewById = async (req, res) => {
         {
           model: user,
           as: "user",
-          attributes: { exclude: ["email", "password"] },
+          attributes: {
+            exclude: ["email", "password"],
+            include: [
+              [
+                models.sequelize.fn("AVG", models.sequelize.col("rating")),
+                "popularity",
+              ],
+            ],
+          },
         },
       ],
     });

@@ -4,6 +4,8 @@ const character=require('./character')
 const movchara=require('./movie_character')
 const review=require('./review')
 const user = require('./user')
+
+
 const router= express.Router()
 
 router.get('/',(req,res)=>{

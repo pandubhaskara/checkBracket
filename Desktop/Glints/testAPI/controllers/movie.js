@@ -90,19 +90,20 @@ module.exports = {
           {
             model: review,
             as: "reviews",
-            attributes: {exclude: ['movieId']},
-            include: [{
-              model :user,
-              as: "user",
-              attributes: { exclude: ["email", "password","role"] }
-            }]
+            attributes: { exclude: ["movieId"] },
+            include: [
+              {
+                model: user,
+                as: "user",
+                attributes: { exclude: ["email", "password", "role"] },
+              },
+            ],
           },
         ],
         order: [
           ["createdAt", "ASC"],
           [{ model: characters, as: "characters" }, "createdAt", "ASC"],
         ],
-        
       });
       if (!data) {
         return res.status(404).json({
@@ -141,12 +142,18 @@ module.exports = {
           {
             model: review,
             as: "reviews",
-            attributes: {exclude: ['movieId']},
-            include: [{
-              model :user,
-              as: "user",
-              attributes: { exclude: ["email", "password","role"] }
-            }]
+            attributes: {
+              exclude: ["movieId"],
+            },
+            include: [
+              {
+                model: user,
+                as: "user",
+                attributes: {
+                  exclude: ["email", "password", "role"],
+                },
+              },
+            ],
           },
         ],
         order: [

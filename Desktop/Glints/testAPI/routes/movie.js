@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const movie = require("../controllers/movie")
+const {authentication} = require('../middlewares/auth');
 
 router.get('/', movie.getMovie)
 router.post('/', movie.postMovie)
