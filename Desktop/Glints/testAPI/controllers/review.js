@@ -1,6 +1,5 @@
 const models = require("../models");
 const review = require("../models").Review;
-const movie = require("../models").moviedb;
 const user = require("../models").User;
 
 const getAllReview = async (req, res) => {
@@ -15,18 +14,7 @@ const getAllReview = async (req, res) => {
             exclude: ["email", "password","id"],
           },
         },
-      ],
-      attributes: [
-        "movieId",
-        [
-          models.sequelize.fn("AVG", models.sequelize.col("rating")),
-          "ratingAvg",
-        ],
-      ],
-      group: ["movieId"],
-      order: [
-        [models.sequelize.fn("AVG", models.sequelize.col("rating")), "DESC"],
-      ],
+      ]
     });
     if (!Review) {
       res.status(400).json({
@@ -100,12 +88,6 @@ const getReviewById = async (req, res) => {
           as: "user",
           attributes: {
             exclude: ["email", "password"],
-            include: [
-              [
-                models.sequelize.fn("AVG", models.sequelize.col("rating")),
-                "popularity",
-              ],
-            ],
           },
         },
       ],

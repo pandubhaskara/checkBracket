@@ -79,31 +79,31 @@ module.exports = {
   getMovie: async (req, res) => {
     try {
       const data = await moviedb.findAll({
-        include: [
-          {
-            model: characters,
-            as: "characters",
-            through: {
-              attributes: [],
-            },
-          },
-          {
-            model: review,
-            as: "reviews",
-            attributes: { exclude: ["movieId"] },
-            include: [
-              {
-                model: user,
-                as: "user",
-                attributes: { exclude: ["email", "password", "role"] },
-              },
-            ],
-          },
-        ],
-        order: [
-          ["createdAt", "ASC"],
-          [{ model: characters, as: "characters" }, "createdAt", "ASC"],
-        ],
+        // include: [
+        //   {
+        //     model: characters,
+        //     as: "characters",
+        //     through: {
+        //       attributes: [],
+        //     },
+        //   },
+        //   {
+        //     model: review,
+        //     as: "reviews",
+        //     attributes: { exclude: ["movieId"] },
+        //     include: [
+        //       {
+        //         model: user,
+        //         as: "user",
+        //         attributes: { exclude: ["email", "password", "role"] },
+        //       },
+        //     ],
+        //   },
+        // ],
+        // order: [
+        //   ["createdAt", "ASC"],
+        //   [{ model: characters, as: "characters" }, "createdAt", "ASC"],
+        // ],
       });
       if (!data) {
         return res.status(404).json({
@@ -126,6 +126,7 @@ module.exports = {
     }
   },
   getByIdMovie: async (req, res) => {
+const body=req.body
     try {
       const movie = await moviedb.findOne({
         where: {
@@ -159,20 +160,46 @@ module.exports = {
         order: [
           ["createdAt", "ASC"],
           [{ model: characters, as: "characters" }, "createdAt", "ASC"],
-        ],
+        ]
       });
       if (!movie) {
         return res.status(400).json({
           status: "failed",
           message: "Movie not found!",
         });
-      } else {
+      }
+      const rating = await review.findAll({
+        where :{
+          movieId : req.params.id
+        },
+        attributes: [
+          [
+            models.sequelize.fn("AVG", models.sequelize.col("rating")),
+            "ratings",
+          ],
+        ],
+        raw: true
+      })
+      const update = await moviedb.update({
+        star: rating[0].ratings
+      },
+      {
+        where:{
+        id: req.params.id
+      }
+    })
+      if(!rating){
+        return res.status(400).json({
+          status: "failed",
+          message :"there is no reviews yet"
+        })
+      }
         return res.status(200).json({
           status: "success",
-          message: "Successfully retrieved user!",
-          data: movie,
+          message: "Successfully retrieved movie!",
+          data: movie
         });
-      }
+    
     } catch (error) {
       console.log(error);
       return res.status(500).json({
