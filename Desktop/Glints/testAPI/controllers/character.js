@@ -18,7 +18,17 @@ module.exports = {
         },
         { abortEarly: false }
       );
-
+      const dulplicate = await characters.findOne({
+        where: {
+          name: body.name,
+        },
+      });
+      if (dulplicate) {
+        res.status(400).json({
+          status: "failed",
+          message: "The artist already exist on database"
+        });
+      }
       if (error) {
         return res.status(400).json({
           status: "failed",
