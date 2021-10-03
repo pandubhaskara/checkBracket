@@ -8,7 +8,7 @@ cloudinary.config({
   api_key: "171975557362161",
   api_secret: "QMLVcP8Tib2SdMtPbiiOZHW6TKI",
 });
-
+module.exports = (fieldName)=>{
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -16,4 +16,16 @@ const storage = new CloudinaryStorage({
   },
 });
 
-module.exports.upload = multer({ storage: storage });
+const upload = multer({storage: storage,
+  // limits: {
+  //     fileSize: maxSize
+  // }
+}).single(fieldName)
+
+return(req,res,next)=>{
+  upload(req,res,(arr)=>{
+    return next();
+  })
+}
+}
+// module.exports.upload = multer({ storage: storage }), upload;

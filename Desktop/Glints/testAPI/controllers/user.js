@@ -14,7 +14,10 @@ class userController {
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required(),
       });
-      const check = schema.validate({ ...body }, { abortEarly: false });
+      const check = schema.validate(
+        { ...body }, 
+        { abortEarly: false }
+      );
       if (check.error) {
         return res.status(400).json({
           status: "failed",
