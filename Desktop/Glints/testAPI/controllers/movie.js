@@ -79,12 +79,13 @@ module.exports = {
   },
   getMovie: async (req, res) => {
     try {
-      const data = await moviedb.findAll({
+      const data = await moviedb.findAll(
+        {
         order: [
-          ["createdAt", "ASC"],
-          [{ model: characters, as: "characters" }, "createdAt", "ASC"],
+          ["star", "DESC"],
         ],
-      });
+      }
+      );
       if (!data) {
         return res.status(404).json({
           status: "failed",

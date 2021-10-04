@@ -4,7 +4,7 @@ const movie = require("../controllers/movie")
 const {authentication} = require('../middlewares/auth');
 const { isAdmin } = require('../middlewares/isAdmin');
 
-router.get('/', authentication, movie.getMovie)
+router.get('/',  movie.getMovie)
 router.post('/', movie.postMovie)
 router.get('/:id', movie.getByIdMovie)
 router.put('/:id', movie.updateMovie)
