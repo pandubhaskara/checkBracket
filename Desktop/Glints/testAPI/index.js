@@ -4,6 +4,8 @@ const cors = require('cors')
 const multer= require('multer')
 const cloudinary = require("multer-storage-cloudinary");
 const form = multer()
+// const FormData = require('form-data');
+// const form1 = new FormData();
 // const form1 = cloudinary()
 
 // const input = require('./data.json')
@@ -12,6 +14,7 @@ const port = process.env.PORT || 5000;
 app.use(express.json())
 app.use(cors())
 app.use(form.array())
+// app.use(form1.array())
 // app.use(form1.array())
 app.get("/", (req,res)=>{
     res.json({

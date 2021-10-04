@@ -6,7 +6,7 @@ const { isAdmin } = require('../middlewares/isAdmin');
 const upload  = require("../middlewares/multer");
 
 router.post("/", upload("profilePicture"), userController.createUser);
-router.post("/login", userController.Login);
+router.post("/login", userController.Login );
 router.get("/", userController.getAllUser);
 router.get("/:id", userController.viewUserById);
 router.put("/:id", upload("profilePicture"), userController.updateUser);
