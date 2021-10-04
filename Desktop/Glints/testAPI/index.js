@@ -4,6 +4,7 @@ const cors = require('cors')
 const multer= require('multer')
 const cloudinary = require("multer-storage-cloudinary");
 const form = multer()
+const sequelize = require('sequelize')
 // const FormData = require('form-data');
 // const form1 = new FormData();
 // const form1 = cloudinary()

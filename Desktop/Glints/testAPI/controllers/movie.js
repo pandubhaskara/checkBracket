@@ -4,6 +4,7 @@ const moviedb = require("../models").moviedb;
 const characters = require("../models").characters;
 const review = require("../models").Review;
 const user = require("../models").User;
+const sequelize = require('sequelize')
 
 module.exports = {
   postMovie: async (req, res) => {
@@ -79,31 +80,10 @@ module.exports = {
   getMovie: async (req, res) => {
     try {
       const data = await moviedb.findAll({
-        // include: [
-        //   {
-        //     model: characters,
-        //     as: "characters",
-        //     through: {
-        //       attributes: [],
-        //     },
-        //   },
-        //   {
-        //     model: review,
-        //     as: "reviews",
-        //     attributes: { exclude: ["movieId"] },
-        //     include: [
-        //       {
-        //         model: user,
-        //         as: "user",
-        //         attributes: { exclude: ["email", "password", "role"] },
-        //       },
-        //     ],
-        //   },
-        // ],
-        // order: [
-        //   ["createdAt", "ASC"],
-        //   [{ model: characters, as: "characters" }, "createdAt", "ASC"],
-        // ],
+        order: [
+          ["createdAt", "ASC"],
+          [{ model: characters, as: "characters" }, "createdAt", "ASC"],
+        ],
       });
       if (!data) {
         return res.status(404).json({
@@ -126,7 +106,7 @@ module.exports = {
     }
   },
   getByIdMovie: async (req, res) => {
-const body=req.body
+    const body = req.body;
     try {
       const movie = await moviedb.findOne({
         where: {
@@ -160,7 +140,7 @@ const body=req.body
         order: [
           ["createdAt", "ASC"],
           [{ model: characters, as: "characters" }, "createdAt", "ASC"],
-        ]
+        ],
       });
       if (!movie) {
         return res.status(400).json({
@@ -169,37 +149,38 @@ const body=req.body
         });
       }
       const rating = await review.findAll({
-        where :{
-          movieId : req.params.id
+        where: {
+          movieId: req.params.id,
         },
         attributes: [
           [
-            models.sequelize.fn("AVG", models.sequelize.col("rating")),
+            sequelize.fn('ROUND', sequelize.fn('AVG', sequelize.col('rating')),2),
             "ratings",
           ],
         ],
-        raw: true
-      })
-      const update = await moviedb.update({
-        star: rating[0].ratings
-      },
-      {
-        where:{
-        id: req.params.id
-      }
-    })
-      if(!rating){
+        raw: true,
+      });
+      const update = await moviedb.update(
+        {
+          star: rating[0].ratings,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      );
+      if (!rating) {
         return res.status(400).json({
           status: "failed",
-          message :"there is no reviews yet"
-        })
-      }
-        return res.status(200).json({
-          status: "success",
-          message: "Successfully retrieved movie!",
-          data: movie
+          message: "there is no reviews yet",
         });
-    
+      }
+      return res.status(200).json({
+        status: "success",
+        message: "Successfully retrieved movie!",
+        data: movie,
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json({
