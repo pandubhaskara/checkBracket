@@ -5,6 +5,7 @@ const characters = require("../models").characters;
 const review = require("../models").Review;
 const user = require("../models").User;
 const sequelize = require('sequelize')
+const Op = sequelize.Op;
 
 module.exports = {
   postMovie: async (req, res) => {
@@ -45,7 +46,20 @@ module.exports = {
           errors: error["details"][0]["message"],
         });
       }
-
+      const title = req.query.title
+      const dulplicate = await characters.findOne({
+        where: {
+          title: {
+            [Op.iLike]:`%${title}%`
+          }
+        },
+      });
+      if (dulplicate) {
+        res.status(400).json({
+          status: "failed",
+          message: "This movie was already exist on database"
+        });
+      }
       const check = await moviedb.create({
         title: body.title,
         synopsis: body.synopsis,
@@ -78,19 +92,24 @@ module.exports = {
     }
   },
   getMovie: async (req, res) => {
+   const title = req.query.title
     try {
       const data = await moviedb.findAll(
         {
         order: [
           ["star", "DESC"],
         ],
+        where:{
+          title: {
+            [Op.iLike]:`%${title}%`
+          }
+        }
       }
-      );
-      if (!data) {
+      )
+      if(data.length==0) {
         return res.status(404).json({
           status: "failed",
-          message: "Data not found",
-          data: [],
+          message: "Data not found"
         });
       }
       return res.status(200).json({

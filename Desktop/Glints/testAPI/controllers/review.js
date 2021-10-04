@@ -37,7 +37,7 @@ const getAllReview = async (req, res) => {
 const getReviewByPage = async (req, res) => {
   try {
     const page = parseInt(req.query.page);
-    const limit = parseInt(req.query.limit);
+    const limit = 10;
 
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
