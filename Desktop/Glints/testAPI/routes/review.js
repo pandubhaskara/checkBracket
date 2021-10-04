@@ -5,7 +5,7 @@ const {authentication} = require('../middlewares/auth');
 const { isAdmin } = require('../middlewares/isAdmin');
 
 router.get("/", ReviewController.getAllReview);
-router.get("/page", ReviewController.getReviewByPage);
+router.get("/", ReviewController.getReviewByPage);
 router.get("/:id", ReviewController.getReviewById);
 router.get("/user/:userId", ReviewController.getReviewByUserId);
 router.post("/", authentication, ReviewController.createReview);

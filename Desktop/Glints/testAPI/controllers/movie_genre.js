@@ -7,13 +7,13 @@ module.exports = {
     try {
       const schema = Joi.object({
         movie_id: Joi.number().required(),
-        character_id: Joi.number().required(),
+        genre_id: Joi.number().required(),
       });
 
       const { error } = schema.validate(
         {
           movie_id: body.movie_id,
-          character_id: body.character_id,
+          genre_id: body.genre_id,
         },
         { abortEarly: false }
       );
@@ -26,9 +26,9 @@ module.exports = {
         });
       }
 
-      const check = await movie_character.create({
+      const check = await movie_genre.create({
         movie_id: body.movie_id,
-        character_id: body.character_id,
+        genre_id: body.genre_id,
       });
 
       if (!check) {
@@ -52,7 +52,7 @@ module.exports = {
   },
   get: async (req, res) => {
     try {
-      const data = await movie_character.findAll();
+      const data = await movie_genre.findAll();
       if (!data) {
         return res.status(404).json({
           status: "failed",
@@ -62,7 +62,7 @@ module.exports = {
       }
       return res.status(200).json({
         status: "success",
-        message: "Successfully retrieved characters tables",
+        message: "Successfully retrieved genres tables",
         data: data,
       });
     } catch (error) {
@@ -79,13 +79,13 @@ module.exports = {
     try {
       const schema = Joi.object({
         movie_id: Joi.number(),
-        character_id: Joi.number(),
+        genre_id: Joi.number(),
       });
 
       const { error } = schema.validate(
         {
           movie_id: body.name,
-          character_id: body.photo,
+          genre_id: body.photo,
         },
         { abortEarly: false }
       );
@@ -98,7 +98,7 @@ module.exports = {
         });
       }
 
-      const updatedMochar = await movie_character.update(
+      const updatedMochar = await movie_genre.update(
         { ...body },
         {
           where: {
@@ -113,7 +113,7 @@ module.exports = {
         });
       }
 
-      const data = await movie_character.findOne({
+      const data = await movie_genre.findOne({
         where: {
           id: req.params.id,
         },
@@ -135,7 +135,7 @@ module.exports = {
   delete: async (req, res) => {
     const id = req.params.id;
     try {
-      const check = await movie_character.destroy({
+      const check = await movie_genre.destroy({
         where: {
           id, // id : id
         },

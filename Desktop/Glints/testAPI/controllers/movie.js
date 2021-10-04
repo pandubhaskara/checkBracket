@@ -2,6 +2,7 @@ const Joi = require("joi");
 const models = require("../models");
 const moviedb = require("../models").moviedb;
 const characters = require("../models").characters;
+const genre = require("../models").genre;
 const review = require("../models").Review;
 const user = require("../models").User;
 const sequelize = require('sequelize')
@@ -136,6 +137,13 @@ module.exports = {
           {
             model: characters,
             as: "characters",
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            model: genre,
+            as: "genres",
             through: {
               attributes: [],
             },
