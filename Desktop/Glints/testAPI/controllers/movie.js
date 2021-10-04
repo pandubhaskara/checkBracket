@@ -5,7 +5,7 @@ const characters = require("../models").characters;
 const genre = require("../models").genre;
 const review = require("../models").Review;
 const user = require("../models").User;
-const sequelize = require('sequelize')
+const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
 module.exports = {
@@ -47,18 +47,18 @@ module.exports = {
           errors: error["details"][0]["message"],
         });
       }
-      const title = req.query.title
+      const title = req.query.title;
       const dulplicate = await characters.findOne({
         where: {
           title: {
-            [Op.iLike]:`%${title}%`
-          }
+            [Op.iLike]: `%${title}%`,
+          },
         },
       });
       if (dulplicate) {
         res.status(400).json({
           status: "failed",
-          message: "This movie was already exist on database"
+          message: "This movie was already exist on database",
         });
       }
       const check = await moviedb.create({
@@ -93,31 +93,38 @@ module.exports = {
     }
   },
   getMovie: async (req, res) => {
-   const title = req.query.title
+    const title = req.query.title;
     try {
-      const data = await moviedb.findAll(
-        {
-        order: [
-          ["star", "DESC"],
-        ],
-        where:{
+      const data = await moviedb.findAll({
+        // order: [
+        //   ["star", "DESC"],
+        // ],
+        where: {
           title: {
-            [Op.iLike]:`%${title}%`
-          }
-        }
-      }
-      )
-      if(data.length==0) {
-        return res.status(404).json({
-          status: "failed",
-          message: "Data not found"
+            [Op.iLike]: `%${title}%`,
+          },
+        },
+      });
+      if (!title) {
+        return res.status(200).json({
+          status: "success",
+          message: "Successfully retrieved movies tables",
+          data: await moviedb.findAll({
+            order: [["star", "DESC"]],
+          }),
         });
       }
-      return res.status(200).json({
-        status: "success",
-        message: "Successfully retrieved movies tables",
-        data: data,
-      });
+      if (data.length == 0) {
+        return res.status(404).json({
+          status: "failed",
+          message: "Data not found",
+        });
+      }
+      // return res.status(200).json({
+      //   status: "success",
+      //   message: "Successfully retrieved movies tables",
+      //   data: data,
+      // });
     } catch (error) {
       console.log(error);
       return res.status(500).json({
@@ -182,7 +189,11 @@ module.exports = {
         },
         attributes: [
           [
-            sequelize.fn('ROUND', sequelize.fn('AVG', sequelize.col('rating')),2),
+            sequelize.fn(
+              "ROUND",
+              sequelize.fn("AVG", sequelize.col("rating")),
+              2
+            ),
             "ratings",
           ],
         ],
