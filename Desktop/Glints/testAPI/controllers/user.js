@@ -5,69 +5,8 @@ const { generateToken } = require("../helpers/jwt");
 const { getUserData } = require("../helpers/jwt");
 const Joi = require("joi");
 
-class userController {
-  static async createUser(req, res) {
-    const body = req.body;
-    try {
-      const schema = Joi.object({
-        fullName: Joi.string().min(4).required(),
-        email: Joi.string().email().required(),
-        password: Joi.string().min(6).required(),
-      });
-      const check = schema.validate(
-        { ...body }, 
-        { abortEarly: false }
-      );
-      if (check.error) {
-        return res.status(400).json({
-          status: "failed",
-          message: "Bad Request",
-          errors: check.error["details"][0]["message"],
-        });
-      }
-      const checkEmail = await User.findOne({
-        where: {
-          email: body.email,
-        },
-      });
-      if (checkEmail) {
-        return res.status(400).json({
-          status: "failed",
-          message: "Email already used, please use another email",
-        });
-      }
-      const hashedPassword = await bcrypt.hash(body.password, 10);
-      if (req.file && req.file.path) {
-        users.profilePicture = req.file.path;
-      }
-      const user = await User.create({
-        fullName: body.fullName,
-        email: body.email,
-        password: hashedPassword
-      });
-      if (user) {
-        let dataUser = user.dataValues;
-        let token = generateToken(dataUser);
-        return res.status(200).json({
-          success: true,
-          message: "Successfully created user account",
-          token: token,
-        });
-      } else {
-        return res.status(401).json({ 
-          message: "Failed to create user account" 
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({
-        status: "failed",
-        message: error.message || "Internal Server Error",
-      });
-    }
-  }
-
-  static async Login(req, res) {
+module.exports = {
+  Login: async (req, res) => {
     const body = req.body;
     try {
       const email = body.email;
@@ -95,15 +34,15 @@ class userController {
         let dataUser = user.dataValues;
         delete dataUser.password;
         let token = generateToken(dataUser);
-        return res.status(200).json({ 
-          success: true, 
-          message: "Login success", 
-          token: token 
+        return res.status(200).json({
+          success: true,
+          message: "Login success",
+          token: token,
         });
       } else {
         return res.status(401).json({
-          status: "Failed", 
-          message: "Incorrect email or password" 
+          status: "Failed",
+          message: "Incorrect email or password",
         });
       }
     } catch (error) {
@@ -113,9 +52,65 @@ class userController {
         message: error.message || "Internal Server Error",
       });
     }
-  }
-
-  static async getAllUser(req, res) {
+  },
+  createUser: async (req, res) => {
+    const body = req.body;
+    try {
+      const schema = Joi.object({
+        fullName: Joi.string().min(4).required(),
+        email: Joi.string().email().required(),
+        password: Joi.string().min(6).required(),
+      });
+      const check = schema.validate({ ...body }, { abortEarly: false });
+      if (check.error) {
+        return res.status(400).json({
+          status: "failed",
+          message: "Bad Request",
+          errors: check.error["details"][0]["message"],
+        });
+      }
+      const checkEmail = await User.findOne({
+        where: {
+          email: body.email,
+        },
+      });
+      if (checkEmail) {
+        return res.status(400).json({
+          status: "failed",
+          message: "Email already used, please use another email",
+        });
+      }
+      const hashedPassword = await bcrypt.hash(body.password, 10);
+      if (req.file && req.file.path) {
+        users.profilePicture = req.file.path;
+      }
+      const user = await User.create({
+        fullName: body.fullName,
+        email: body.email,
+        password: hashedPassword,
+      });
+      if (user) {
+        let dataUser = user.dataValues;
+        let token = generateToken(dataUser);
+        return res.status(200).json({
+          success: true,
+          message: "Successfully created user account",
+          token: token,
+        });
+      } else {
+        return res.status(401).json({
+          message: "Failed to create user account",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        status: "failed",
+        message: error.message || "Internal Server Error",
+      });
+    }
+  },
+  getAllUser: async(req, res) => {
     try {
       const users = await User.findAll();
       if (!users.length) {
@@ -136,9 +131,8 @@ class userController {
         message: error.message || "Internal Server Error",
       });
     }
-  }
-
-  static async viewUserById(req, res) {
+  },
+  viewUserById: async (req, res) => {
     try {
       const userData = getUserData(req.headers.token);
       const userId = userData.id;
@@ -146,7 +140,7 @@ class userController {
         where: {
           id: req.params.id,
         },
-        attributes: { exclude: ['password', 'role'] }
+        attributes: { exclude: ["password", "role"] },
       });
       if (!user) {
         return res.status(400).json({
@@ -167,9 +161,8 @@ class userController {
         message: error.message || "Internal Server Error",
       });
     }
-  }
-
-  static async updateUser(req, res) {
+  },
+  updateUser: async (req, res) => {
     const body = req.body;
     const id = req.params.id;
     try {
@@ -207,7 +200,8 @@ class userController {
         if (checkPassword) {
           return res.status(400).json({
             status: "Failed",
-            message: "New password has already used before, try another password"
+            message:
+              "New password has already used before, try another password",
           });
         }
         const hashedPassword = await bcrypt.hash(body.password, 10);
@@ -237,7 +231,7 @@ class userController {
       if (!updatedUser) {
         return res.status(400).json({
           status: "Failed",
-          message: "Failed to update!"
+          message: "Failed to update!",
         });
       }
       const updateUser = await User.findOne({
@@ -245,10 +239,10 @@ class userController {
           id: req.params.id,
         },
       });
-      return res.status(200).json({ 
-        status: "Success", 
-        message: "Successfully update user data", 
-        data: updateUser 
+      return res.status(200).json({
+        status: "Success",
+        message: "Successfully update user data",
+        data: updateUser,
       });
     } catch (error) {
       console.log(error);
@@ -257,9 +251,8 @@ class userController {
         message: error.message || "Internal Server Error",
       });
     }
-  }
-
-  static async deleteUser(req, res) {
+  },
+  deleteUser: async(req, res) => {
     try {
       const deletedUser = await User.destroy({
         where: {
@@ -284,7 +277,5 @@ class userController {
         message: error.message || "Internal Server Error",
       });
     }
-  }
-}
-
-module.exports = userController;
+  },
+};
