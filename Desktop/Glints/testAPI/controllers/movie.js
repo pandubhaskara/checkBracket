@@ -96,9 +96,9 @@ module.exports = {
     const title = req.query.title;
     try {
       const data = await moviedb.findAll({
-        // order: [
-        //   ["star", "DESC"],
-        // ],
+        order: [
+          ["star", "DESC"],
+        ],
         where: {
           title: {
             [Op.iLike]: `%${title}%`,
@@ -109,9 +109,11 @@ module.exports = {
         return res.status(200).json({
           status: "success",
           message: "Successfully retrieved movies tables",
-          data: await moviedb.findAll({
+          data: await moviedb.findAll(
+            {
             order: [["star", "DESC"]],
-          }),
+          }
+          ),
         });
         
       }
@@ -122,11 +124,11 @@ module.exports = {
         });
       }
 
-      // return res.status(200).json({
-      //   status: "success",
-      //   message: "Successfully retrieved movies tables",
-      //   data: data,
-      // });
+      return res.status(200).json({
+        status: "success",
+        message: "Successfully retrieved movies tables",
+        data: data,
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json({
