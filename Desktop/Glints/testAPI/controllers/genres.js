@@ -61,7 +61,7 @@ module.exports = {
       }
       return res.status(200).json({
         status: "success",
-        message: "Successfully retrieved characters tables",
+        message: "Successfully retrieved genres tables",
         data: data,
       });
     } catch (error) {
@@ -72,19 +72,17 @@ module.exports = {
       });
     }
   },
-  updateCharacter: async (req, res) => {
+  updategGenre: async (req, res) => {
     const body = req.body;
     console.log(body);
     try {
       const schema = Joi.object({
-        name: Joi.string(),
-        photo: Joi.string(),
+        genrename: Joi.string()
       });
 
       const { error } = schema.validate(
         {
-          name: body.name,
-          photo: body.photo,
+          genrename: body.genrename
         },
         { abortEarly: false }
       );
@@ -97,7 +95,7 @@ module.exports = {
         });
       }
 
-      const updatedCharacter = await characters.update(
+      const updatedgenre = await genres.update(
         { ...body },
         {
           where: {
@@ -105,14 +103,14 @@ module.exports = {
           },
         }
       );
-      if (!updatedCharacter[0]) {
+      if (!updatedgenre[0]) {
         return res.status(400).json({
           status: "failed",
           message: "Unable to update database",
         });
       }
 
-      const data = await characters.findOne({
+      const data = await genres.findOne({
         where: {
           id: req.params.id,
         },
@@ -131,10 +129,10 @@ module.exports = {
       });
     }
   },
-  deleteCharacter: async (req, res) => {
+  deletegenre: async (req, res) => {
     const id = req.params.id;
     try {
-      const check = await characters.destroy({
+      const check = await genres.destroy({
         where: {
           id, // id : id
         },

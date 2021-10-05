@@ -8,8 +8,8 @@ router.get("/", ReviewController.getAllReview);
 router.get("/", ReviewController.getReviewByPage);
 router.get("/:id", ReviewController.getReviewById);
 router.get("/user/:userId", ReviewController.getReviewByUserId);
-router.post("/", authentication, ReviewController.createReview);
-router.put("/:id", ReviewController.updateReview);
+router.post("/:movie_id", authentication, ReviewController.createReview);
+router.put("/:movie_id", ReviewController.updateReview);
 router.delete("/:id", ReviewController.deleteReview);
 
 module.exports = router;

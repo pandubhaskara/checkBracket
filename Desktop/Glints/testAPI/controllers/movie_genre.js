@@ -84,8 +84,8 @@ module.exports = {
 
       const { error } = schema.validate(
         {
-          movie_id: body.name,
-          genre_id: body.photo,
+          movie_id: body.movie_id,
+          genre_id: body.genre_id,
         },
         { abortEarly: false }
       );
@@ -102,7 +102,7 @@ module.exports = {
         { ...body },
         {
           where: {
-            id: req.params.id,
+            movie_id: req.params.id,
           },
         }
       );
@@ -115,7 +115,7 @@ module.exports = {
 
       const data = await movie_genre.findOne({
         where: {
-          id: req.params.id,
+          movie_id: req.params.id,
         },
       });
 

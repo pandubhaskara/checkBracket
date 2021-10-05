@@ -113,6 +113,7 @@ module.exports = {
             order: [["star", "DESC"]],
           }),
         });
+        
       }
       if (data.length == 0) {
         return res.status(404).json({
@@ -120,6 +121,7 @@ module.exports = {
           message: "Data not found",
         });
       }
+
       // return res.status(200).json({
       //   status: "success",
       //   message: "Successfully retrieved movies tables",

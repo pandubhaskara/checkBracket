@@ -1,6 +1,13 @@
 const models = require("../models");
 const review = require("../models").Review;
 const user = require("../models").User;
+const { getUserData, generateToken } = require("../helpers/jwt");
+const express = require('express');
+const bodyParser = require('body-parser');
+const api = express();
+
+api.use(bodyParser.json());
+api.use(bodyParser.urlencoded({ extended: true }));
 
 const getAllReview = async (req, res) => {
   try {
@@ -140,7 +147,10 @@ const getReviewByUserId = async (req, res) => {
 };
 const createReview = async (req, res) => {
   try {
-    const { userId, movieId, comment, rating } = req.body;
+    const {comment, rating } = req.body;
+    const movieId = req.params.movie_id
+    const userData = getUserData(req.headers.token)
+    const userId= userData.id
     const isExist = await models.Review.findOne({
       where: {
         userId: userId,
@@ -180,8 +190,10 @@ const createReview = async (req, res) => {
 };
 const updateReview = async (req, res) => {
   try {
-    const id = req.params.id;
-    const { userId, movieId, comment, rating } = req.body;
+    const movieId = req.params.movie_id
+    const userData = getUserData(req.headers.token)
+    const userId= userData.id
+    const {comment, rating } = req.body;
     const Review = await models.Review.update(
       {
         userId,
@@ -191,7 +203,7 @@ const updateReview = async (req, res) => {
       },
       {
         where: {
-          id: id,
+          movieId,
         },
       }
     );

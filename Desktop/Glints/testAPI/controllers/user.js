@@ -138,7 +138,7 @@ module.exports = {
       const userId = userData.id;
       const user = await User.findOne({
         where: {
-          id: req.params.id,
+          id: userId,
         },
         attributes: { exclude: ["password", "role"] },
       });
