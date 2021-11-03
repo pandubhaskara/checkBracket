@@ -1,17 +1,23 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
-	"github.com/pandubhaskara/go-crud/controllers"
-	"github.com/pandubhaskara/go-crud/database"
+	_ "github.com/joho/godotenv/autoload"
+	"github.com/pandubhaskara/go-api/controllers"
+	"github.com/pandubhaskara/go-api/database"
+	"github.com/pandubhaskara/go-api/models"
 )
 
 func main() {
 	server := gin.Default()
+	db, err := database.ConnectMysql()
+	db.AutoMigrate(&models.Brand{})
+	db.AutoMigrate(&models.Laptop{})
 
-	db, error := database.ConnectMysql()
 	if err != nil {
-		fmt.Error(err.Error())
+		fmt.Errorf(err.Error())
 	}
 
 	server.Use(func(ctx *gin.Context) {
