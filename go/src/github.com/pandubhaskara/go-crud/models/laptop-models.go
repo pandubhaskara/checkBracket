@@ -8,6 +8,11 @@ type Brand struct {
 	Year string `json:"year" gorm:"type:int(11)"`
 }
 
+type BrandInput struct {
+	Name string `json:"name" binding:"required"`
+	Year string `json:"year" binding:"required"`
+}
+
 type Laptop struct {
 	*gorm.Model
 	Name    string `json:"name" gorm:"type:varchar(50)"`
