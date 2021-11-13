@@ -20,7 +20,7 @@ function checkBracket(input){
             }
         }
     }
-return (data.length==0)?"true":"salah"
+    return (data.length==0)?"true":"salah"
 }
 
 console.log(
